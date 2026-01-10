@@ -3,7 +3,7 @@ name: Time Sum Artifact Job
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
+    - cron: "*/3 * * * *"   # every 3 minutes
 
 jobs:
   run-time-sum:
