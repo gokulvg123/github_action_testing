@@ -1,40 +1,33 @@
-name: Run on PR merge to main
+name: Run time_sum.py after merge to main
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
 jobs:
-  run-on-merge:
-    if: ${{ github.event.pull_request.merged == true }}
+  run-on-main-update:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install dependencies (if any)
+      - name: Install dependencies
         run: |
-          if [ -f requirements.txt ]; then
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-          else
-            echo "No requirements.txt found, skipping install."
-          fi
+          python -m pip install --upgrade pip
+          pip install pytz
 
       - name: Run time_sum.py
-        run: |
-          python time_sum.py
+        run: python time_sum.py
 
-      # Optional: upload output as artifact (uncomment if you write to a file)
-      #- name: Upload output
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: time-sum-output
-      #    path: ./output.txt
+      - name: Upload output as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: time-sum-output
+          path: output.txt
