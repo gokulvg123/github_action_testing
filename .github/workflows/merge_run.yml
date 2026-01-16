@@ -1,0 +1,40 @@
+name: Run on PR merge to main
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  run-on-merge:
+    if: ${{ github.event.pull_request.merged == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies (if any)
+        run: |
+          if [ -f requirements.txt ]; then
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+          else
+            echo "No requirements.txt found, skipping install."
+          fi
+
+      - name: Run time_sum.py
+        run: |
+          python time_sum.py
+
+      # Optional: upload output as artifact (uncomment if you write to a file)
+      #- name: Upload output
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: time-sum-output
+      #    path: ./output.txt
