@@ -1,0 +1,33 @@
+name: Run time_sum.py after merge to main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-on-main-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytz
+
+      - name: Run time_sum.py
+        run: python time_sum.py
+
+      - name: Upload output as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: time-sum-output
+          path: output.txt
